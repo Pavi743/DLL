@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}Learn{% endblock %}
+{% block content %}
+<div class="layout">
+<aside class="side" aria-label="Section navigation"><a href="#intro">Introduction</a><a href="#node">Node Structure</a><a href="#works">How it works</a><a href="#ops">Operations</a><a href="#code">C Program</a><a href="#complexity">Complexity</a><a href="#compare">Singly vs Doubly</a><a href="#pros">Pros &amp; Cons</a><a href="#apps">Applications</a><a href="#mistakes">Common Mistakes</a></aside>
+<div class="content">
+
+<section id="intro" data-track="intro" class="card"><h1>Learn Doubly Linked List</h1>
+<h2>What is a Linked List?</h2>
+<p>A linked list stores items in separate boxes called <b>nodes</b>. Each node holds a value and the address of another node, so the nodes are "linked" like train coaches.</p>
+<h2>What is a Doubly Linked List?</h2>
+<p>Every node has <b>two</b> links: <code>prev</code> (the node before it) and <code>next</code> (the node after it).</p>
+<div class="row"><span class="nul">NULL</span><span class="arr">←</span><div class="node"><span class="p">PREV</span><b>10</b><span class="n">NEXT</span></div><span class="arr">⇄</span><div class="node"><span class="p">PREV</span><b>20</b><span class="n">NEXT</span></div><span class="arr">⇄</span><div class="node"><span class="p">PREV</span><b>30</b><span class="n">NEXT</span></div><span class="arr">→</span><span class="nul">NULL</span></div>
+<ul><li><b>PREV</b>: address of the previous node (NULL for the first node).</li><li><b>DATA</b>: the stored value.</li><li><b>NEXT</b>: address of the next node (NULL for the last node).</li><li><b>head</b> points to the first node; NULL means "nothing here".</li></ul></section>
+
+<section id="node" data-track="node" class="card"><h2>Node Structure in C</h2>
+<pre><code>struct Node {
+    int data;            // the value stored in the node
+    struct Node* prev;   // address of the previous node
+    struct Node* next;   // address of the next node
+};</code></pre>
+<p><code>struct Node</code> defines a new type. <code>int data</code> holds the value. <code>prev</code> and <code>next</code> are pointers to another <code>struct Node</code>, which is what links nodes together. In memory each node is one block: [ prev | data | next ].</p></section>
+
+<section id="works" class="card"><h2>How it works</h2><ol>
+<li><b>Create a node</b> with malloc and set data; prev and next start as NULL.</li>
+<li><b>Connect nodes</b>: <code>a->next = b</code> and <code>b->prev = a</code> (always both).</li>
+<li><b>prev pointer</b> lets you move one step back.</li><li><b>next pointer</b> lets you move one step forward.</li>
+<li><b>Forward traversal</b>: start at head, print, move <code>t = t->next</code> until NULL.</li>
+<li><b>Backward traversal</b>: go to the tail, print, move <code>t = t->prev</code> until NULL.</li>
+<li><b>Insert</b>: link the new node to both neighbours, then update both neighbours.</li>
+<li><b>Delete</b>: make the neighbours point to each other, then free the node.</li></ol></section>
+
+<section id="ops" data-track="ops" class="card"><h2>Operations</h2><p>Open each one. Try them live in the <a href="{{ url_for('visualizer') }}">Visualizer</a>.</p>
+<details><summary>Create List</summary><p>Start with <code>head = NULL</code>; the first insertion creates the first node.</p><p><b>Time:</b> O(1)</p></details>
+<details><summary>Insert at Beginning</summary><ol><li>Create newNode</li><li>newNode->next = head</li><li>newNode->prev = NULL</li><li>If head exists: head->prev = newNode</li><li>head = newNode</li></ol><p><b>Time:</b> O(1)</p><p>Example: 20 ⇄ 30, insert 10 gives 10 ⇄ 20 ⇄ 30.</p></details>
+<details><summary>Insert at End</summary><ol><li>Create newNode</li><li>If empty: head = newNode</li><li>Else move temp to the last node</li><li>temp->next = newNode; newNode->prev = temp</li></ol><p><b>Time:</b> O(n), or O(1) with a tail pointer</p></details>
+<details><summary>Insert at Position</summary><ol><li>Create newNode</li><li>Move temp to node at position-1</li><li>newNode->next = temp->next; newNode->prev = temp</li><li>If temp->next exists: temp->next->prev = newNode</li><li>temp->next = newNode</li></ol><p><b>Time:</b> O(n)</p><p>Example: 10 ⇄ 20 ⇄ 30, insert 25 at position 3 gives 10 ⇄ 20 ⇄ 25 ⇄ 30.</p></details>
+<details><summary>Delete from Beginning</summary><ol><li>temp = head</li><li>head = head->next</li><li>If head exists: head->prev = NULL</li><li>free(temp)</li></ol><p><b>Time:</b> O(1)</p></details>
+<details><summary>Delete from End</summary><ol><li>Move temp to the last node</li><li>If temp->prev exists: temp->prev->next = NULL, else head = NULL</li><li>free(temp)</li></ol><p><b>Time:</b> O(n), or O(1) with a tail pointer</p></details>
+<details><summary>Delete from Position</summary><ol><li>Move temp to the node</li><li>temp->prev->next = temp->next</li><li>If temp->next exists: temp->next->prev = temp->prev</li><li>free(temp)</li></ol><p><b>Time:</b> O(n)</p></details>
+<details><summary>Forward and Backward Traversal</summary><p>Forward: <code>for (t = head; t; t = t->next)</code>. Backward: go to the tail, then <code>for (; t; t = t->prev)</code>.</p><p><b>Time:</b> O(n)</p></details></section>
+
+<section id="code" data-track="code" class="card"><h2>Complete Menu-Driven C Program</h2>
+<p class="note">This code is for learning. It is <b>not</b> compiled in the browser. Copy it and run with <code>gcc dll.c -o dll</code>.</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct Node { int data; struct Node *prev, *next; };
+struct Node* head = NULL;
+
+struct Node* createNode(int v) {
+    struct Node* n = (struct Node*)malloc(sizeof(struct Node));
+    if (n == NULL) { printf("Memory error\n"); exit(1); }
+    n->data = v; n->prev = NULL; n->next = NULL;
+    return n;
+}
+void insertBegin(int v) {
+    struct Node* n = createNode(v);
+    n->next = head;
+    if (head != NULL) head->prev = n;
+    head = n;
+}
+void insertEnd(int v) {
+    struct Node* n = createNode(v);
+    if (head == NULL) { head = n; return; }
+    struct Node* t = head;
+    while (t->next != NULL) t = t->next;
+    t->next = n; n->prev = t;
+}
+void insertPos(int v, int pos) {
+    if (pos &lt; 1) { printf("Invalid position\n"); return; }
+    if (pos == 1) { insertBegin(v); return; }
+    struct Node* t = head;
+    for (int i = 1; i &lt; pos - 1 &amp;&amp; t != NULL; i++) t = t->next;
+    if (t == NULL) { printf("Invalid position\n"); return; }
+    struct Node* n = createNode(v);
+    n->next = t->next; n->prev = t;
+    if (t->next != NULL) t->next->prev = n;
+    t->next = n;
+}
+void deleteBegin() {
+    if (head == NULL) { printf("List is empty\n"); return; }
+    struct Node* t = head;
+    head = head->next;
+    if (head != NULL) head->prev = NULL;
+    free(t);
+}
+void deleteEnd() {
+    if (head == NULL) { printf("List is empty\n"); return; }
+    struct Node* t = head;
+    while (t->next != NULL) t = t->next;
+    if (t->prev != NULL) t->prev->next = NULL; else head = NULL;
+    free(t);
+}
+void deletePos(int pos) {
+    if (head == NULL) { printf("List is empty\n"); return; }
+    if (pos &lt; 1) { printf("Invalid position\n"); return; }
+    if (pos == 1) { deleteBegin(); return; }
+    struct Node* t = head;
+    for (int i = 1; i &lt; pos &amp;&amp; t != NULL; i++) t = t->next;
+    if (t == NULL) { printf("Invalid position\n"); return; }
+    t->prev->next = t->next;
+    if (t->next != NULL) t->next->prev = t->prev;
+    free(t);
+}
+void forward() {
+    struct Node* t = head;
+    printf("NULL"); while (t != NULL) { printf(" &lt;-> %d", t->data); t = t->next; }
+    printf(" -> NULL\n");
+}
+void backward() {
+    struct Node* t = head;
+    if (t == NULL) { printf("List is empty\n"); return; }
+    while (t->next != NULL) t = t->next;
+    printf("NULL"); while (t != NULL) { printf(" &lt;-> %d", t->data); t = t->prev; }
+    printf(" -> NULL\n");
+}
+int main() {
+    int ch, v, p;
+    do {
+        printf("\n1.Insert Begin 2.Insert End 3.Insert Pos 4.Delete Begin\n");
+        printf("5.Delete End 6.Delete Pos 7.Forward 8.Backward 9.Display 10.Exit\nChoice: ");
+        scanf("%d", &amp;ch);
+        switch (ch) {
+            case 1: printf("Value: "); scanf("%d", &amp;v); insertBegin(v); break;
+            case 2: printf("Value: "); scanf("%d", &amp;v); insertEnd(v); break;
+            case 3: printf("Value and position: "); scanf("%d %d", &amp;v, &amp;p); insertPos(v, p); break;
+            case 4: deleteBegin(); break;
+            case 5: deleteEnd(); break;
+            case 6: printf("Position: "); scanf("%d", &amp;p); deletePos(p); break;
+            case 7: case 9: forward(); break;
+            case 8: backward(); break;
+            case 10: break;
+            default: printf("Invalid choice\n");
+        }
+    } while (ch != 10);
+    return 0;
+}</code></pre>
+<h3>Sample output (static example, not executed here)</h3>
+<pre><code>Choice: 2   Value: 10
+Choice: 2   Value: 20
+Choice: 7
+NULL &lt;-> 10 &lt;-> 20 -> NULL
+Choice: 8
+NULL &lt;-> 20 &lt;-> 10 -> NULL</code></pre></section>
+
+<section id="complexity" data-track="complexity" class="card"><h2>Time and Space Complexity</h2>
+<div class="scroll"><table><tr><th>Operation</th><th>Time</th></tr>
+<tr><td>Insert Beginning</td><td>O(1)</td></tr><tr><td>Insert End</td><td>O(1) if tail exists, else O(n)</td></tr><tr><td>Insert Position</td><td>O(n)</td></tr>
+<tr><td>Delete Beginning</td><td>O(1)</td></tr><tr><td>Delete End</td><td>O(1) if tail exists, else O(n)</td></tr><tr><td>Delete Position</td><td>O(n)</td></tr>
+<tr><td>Forward / Backward Traversal</td><td>O(n)</td></tr><tr><td>Search</td><td>O(n)</td></tr></table></div>
+<p><b>Best case:</b> the target is at the head (or tail with a tail pointer): O(1). <b>Average:</b> about n/2 steps, still O(n). <b>Worst case:</b> the target is at the far end: O(n). <b>Space:</b> O(n) for n nodes, plus one extra pointer per node compared with a singly list.</p></section>
+
+<section id="compare" class="card"><h2>Doubly vs Singly Linked List</h2><div class="scroll"><table>
+<tr><th>Feature</th><th>Singly</th><th>Doubly</th></tr>
+<tr><td>Pointers per node</td><td>1 (next)</td><td>2 (prev, next)</td></tr>
+<tr><td>Forward traversal</td><td>Yes</td><td>Yes</td></tr><tr><td>Backward traversal</td><td>No</td><td>Yes</td></tr>
+<tr><td>Memory</td><td>Less</td><td>More</td></tr><tr><td>Delete a known node</td><td>Needs previous node, O(n)</td><td>O(1)</td></tr>
+<tr><td>Pointer updates</td><td>Fewer</td><td>More</td></tr></table></div></section>
+
+<section id="pros" class="card"><h2>Advantages and Disadvantages</h2>
+<div class="two"><div><h3>Advantages</h3><ul><li>Forward and backward traversal</li><li>Easy deletion when the node is known</li><li>Flexible insertion and deletion</li><li>Bidirectional navigation</li></ul></div>
+<div><h3>Disadvantages</h3><ul><li>Extra memory for prev</li><li>More pointer manipulation</li><li>More complex than singly list</li></ul></div></div></section>
+
+<section id="apps" class="card"><h2>Real-World Applications</h2><ul>
+<li><b>Browser history:</b> Back goes to prev, Forward goes to next.</li><li><b>Undo/Redo:</b> undo moves to the previous state, redo to the next.</li>
+<li><b>Music playlist:</b> previous song and next song buttons.</li><li><b>Image viewer:</b> left and right arrows through photos.</li>
+<li><b>Navigation systems:</b> move to the next or previous stop on a route.</li><li><b>LRU cache:</b> a node is removed from its place and moved to the front in O(1).</li></ul></section>
+
+<section id="mistakes" class="card"><h2>Common Pointer Mistakes</h2><ul>
+<li><b>Forgetting to update prev:</b> the backward chain breaks. Wrong: <code>t->next = n;</code> only. Right: also <code>n->prev = t;</code></li>
+<li><b>Forgetting to update next:</b> forward traversal skips the new node.</li>
+<li><b>Losing head:</b> assigning <code>head = n</code> before <code>n->next = head</code> loses the old list.</li>
+<li><b>Wrong NULL handling:</b> <code>t->next->prev</code> crashes when <code>t->next</code> is NULL. Check first.</li>
+<li><b>Deleting without reconnecting neighbours:</b> they still point to freed memory.</li>
+<li><b>Invalid memory access:</b> using a node after <code>free()</code>.</li>
+<li><b>Not checking an empty list:</b> always test <code>head == NULL</code>.</li></ul></section>
+</div></div>
+{% endblock %}

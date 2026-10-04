@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Practice & Viva{% endblock %}
+{% block content %}
+<section class="card"><h1>Coding Practice</h1>
+<details><summary>1. Create a Doubly Linked List node</summary><p>Write createNode(int v). <b>Input:</b> 10 <b>Expected:</b> node with data 10, prev NULL, next NULL.</p>
+<details><summary>Hint</summary><p>Use malloc(sizeof(struct Node)) and set both pointers to NULL.</p></details>
+<details><summary>Solution</summary><pre><code>struct Node* createNode(int v) {
+    struct Node* n = (struct Node*)malloc(sizeof(struct Node));
+    n->data = v; n->prev = NULL; n->next = NULL;
+    return n;
+}</code></pre></details></details>
+<details><summary>2. Insert a node at the beginning</summary><p><b>Input:</b> list 20 ⇄ 30, insert 10. <b>Expected:</b> 10 ⇄ 20 ⇄ 30.</p>
+<details><summary>Hint</summary><p>Set n->next = head before changing head. Update head->prev if head exists.</p></details>
+<details><summary>Solution</summary><pre><code>void insertBegin(int v) {
+    struct Node* n = createNode(v);
+    n->next = head;
+    if (head != NULL) head->prev = n;
+    head = n;
+}</code></pre></details></details>
+<details><summary>3. Insert a node at the end</summary><p><b>Input:</b> list 10 ⇄ 20, insert 30. <b>Expected:</b> 10 ⇄ 20 ⇄ 30.</p>
+<details><summary>Hint</summary><p>Walk until t->next == NULL, then link both directions.</p></details>
+<details><summary>Solution</summary><pre><code>void insertEnd(int v) {
+    struct Node* n = createNode(v);
+    if (head == NULL) { head = n; return; }
+    struct Node* t = head;
+    while (t->next != NULL) t = t->next;
+    t->next = n; n->prev = t;
+}</code></pre></details></details>
+<details><summary>4. Delete a node with a given value</summary><p><b>Input:</b> 10 ⇄ 20 ⇄ 30, delete 20. <b>Expected:</b> 10 ⇄ 30.</p>
+<details><summary>Hint</summary><p>Find the node, then make its neighbours point to each other.</p></details>
+<details><summary>Solution</summary><pre><code>void deleteValue(int v) {
+    struct Node* t = head;
+    while (t != NULL &amp;&amp; t->data != v) t = t->next;
+    if (t == NULL) return;
+    if (t->prev != NULL) t->prev->next = t->next; else head = t->next;
+    if (t->next != NULL) t->next->prev = t->prev;
+    free(t);
+}</code></pre></details></details>
+<details><summary>5. Display forward and backward</summary><p><b>Input:</b> 10 ⇄ 20 ⇄ 30. <b>Expected:</b> 10 20 30 and 30 20 10.</p>
+<details><summary>Hint</summary><p>Backward: first walk to the tail, then follow prev.</p></details>
+<details><summary>Solution</summary><pre><code>for (t = head; t != NULL; t = t->next) printf("%d ", t->data);
+t = head; while (t->next != NULL) t = t->next;
+for (; t != NULL; t = t->prev) printf("%d ", t->data);</code></pre></details></details></section>
+
+<section id="viva" data-track="viva" class="card"><h1>Important Viva Questions</h1>
+<details><summary>What is a Doubly Linked List?</summary><p>A list whose nodes store data, a prev pointer and a next pointer.</p></details>
+<details><summary>What does a node contain?</summary><p>prev, data, next.</p></details>
+<details><summary>Why do we use the prev pointer?</summary><p>To move backward and to delete a known node quickly.</p></details>
+<details><summary>Difference between singly and doubly lists?</summary><p>Singly has only next and goes one way. Doubly has prev and next and goes both ways, using more memory.</p></details>
+<details><summary>Time complexity of insertion at beginning?</summary><p>O(1).</p></details>
+<details><summary>What happens when head is NULL?</summary><p>The list is empty. Traversal and deletion must be avoided or handled.</p></details>
+<details><summary>Why is NULL used?</summary><p>It marks the end: first->prev and last->next are NULL.</p></details>
+<details><summary>What are the applications?</summary><p>Browser history, undo/redo, playlists, image viewers, LRU cache.</p></details>
+<details><summary>Why is deleting a known node O(1)?</summary><p>prev gives the previous node directly, so no search is needed.</p></details>
+<details><summary>Why call free()?</summary><p>To release memory and avoid a leak.</p></details>
+<details><summary>Can a DLL be circular?</summary><p>Yes. Last->next points to head and head->prev points to last.</p></details>
+<details><summary>Which uses more memory, singly or doubly?</summary><p>Doubly, because of the extra prev pointer.</p></details>
+<details><summary>How do you traverse backward?</summary><p>Go to the tail, then keep doing t = t->prev until NULL.</p></details>
+<details><summary>Cost of searching?</summary><p>O(n).</p></details>
+<details><summary>Cost of insertion at end with a tail pointer?</summary><p>O(1).</p></details>
+<details><summary>First step when inserting after node temp?</summary><p>newNode->next = temp->next, so the rest of the list is not lost.</p></details>
+<details><summary>What is a memory leak?</summary><p>Allocated memory that is never freed.</p></details>
+<details><summary>Can we reverse a DLL?</summary><p>Yes, swap prev and next in every node and move head to the old tail.</p></details>
+<details><summary>Is random access possible?</summary><p>No, you must traverse from head or tail.</p></details>
+<details><summary>Space complexity?</summary><p>O(n).</p></details>
+<h2>Exam questions</h2>
+<p><b>2 marks:</b> Define a doubly linked list. Write the node structure in C.</p>
+<p><b>5 marks:</b> Write the algorithm for insertion at the beginning. Compare singly and doubly lists.</p>
+<p><b>8 marks:</b> Write a C program with insert, delete and traversal in both directions. Explain advantages, disadvantages and applications.</p></section>
+{% endblock %}

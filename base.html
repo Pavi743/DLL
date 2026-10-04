@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Doubly Linked List{% endblock %} | DLL Academy</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="{{ url_for('index') }}">⇄ DLL Academy</a>
+  <nav aria-label="Main navigation">
+    <a href="{{ url_for('learn') }}">Learn</a>
+    <a href="{{ url_for('visualizer') }}">Visualizer</a>
+    <a href="{{ url_for('quiz') }}">Quiz</a>
+    <a href="{{ url_for('practice') }}">Practice &amp; Viva</a>
+  </nav>
+  <div class="search"><label class="sr" for="search">Search topics</label>
+    <input id="search" type="search" placeholder="Search: node, prev, complexity…" autocomplete="off">
+    <div id="results" hidden></div></div>
+  <button id="theme" class="btn small" aria-label="Toggle dark or light mode">🌓</button>
+</header>
+<div class="progress" role="progressbar" aria-label="Learning progress"><div id="bar"></div></div>
+<p class="pct">Progress: <span id="pct">0%</span></p>
+<main>{% block content %}{% endblock %}</main>
+<footer><p><b>Doubly Linked List Interactive Learning System</b> · Data Structures and Algorithms using C</p></footer>
+<div id="toasts" aria-live="polite"></div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

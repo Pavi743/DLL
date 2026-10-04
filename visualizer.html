@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Visualizer{% endblock %}
+{% block content %}
+<section class="card"><h1>Interactive Visualizer</h1>
+<p>Enter a value (and a 1-based position if needed), then click an operation. Max 8 nodes.</p>
+<div class="form"><label for="val">Value</label><input id="val" type="number" value="25">
+<label for="pos">Position</label><input id="pos" type="number" value="3" min="1"></div>
+<div class="actions">
+<button class="btn small" data-op="head">Insert Beginning</button><button class="btn small" data-op="tail">Insert End</button><button class="btn small" data-op="pos">Insert at Position</button>
+<button class="btn small alt" data-op="delhead">Delete Beginning</button><button class="btn small alt" data-op="deltail">Delete End</button><button class="btn small alt" data-op="delpos">Delete at Position</button>
+<button class="btn small" data-op="fwd">Traverse Forward</button><button class="btn small" data-op="bwd">Traverse Backward</button><button class="btn small danger" data-op="clear">Clear List</button></div>
+<div id="stage" class="stage" aria-live="polite"></div>
+<p id="msg" class="msg">Pick an operation to begin.</p>
+<div class="actions"><button id="prev" class="btn small alt">⏮ Previous Step</button><button id="play" class="btn small">▶ Play Animation</button><button id="next" class="btn small alt">Next Step ⏭</button><button id="reset" class="btn small alt">↺ Reset Animation</button></div>
+<h2>Algorithm steps</h2><ol id="steps" class="algo"></ol></section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/visualizer.js') }}"></script>{% endblock %}

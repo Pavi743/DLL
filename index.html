@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>DOUBLY LINKED LIST</h1>
+  <p class="sub">Learn • Visualize • Code • Practice</p>
+  <p>A doubly linked list is a chain of nodes where every node knows both its <b>previous</b> and its <b>next</b> neighbour. This site teaches it step by step using C.</p>
+  <div class="actions">
+    <a class="btn" href="{{ url_for('learn') }}">Start Learning</a>
+    <a class="btn alt" href="{{ url_for('visualizer') }}">Visualize</a>
+    <a class="btn alt" href="{{ url_for('quiz') }}">Practice</a>
+  </div>
+  <div class="row demo"><span class="nul">NULL</span><span class="arr">←</span>
+    <div class="node"><span class="p">PREV</span><b>10</b><span class="n">NEXT</span></div><span class="arr">⇄</span>
+    <div class="node"><span class="p">PREV</span><b>20</b><span class="n">NEXT</span></div><span class="arr">⇄</span>
+    <div class="node"><span class="p">PREV</span><b>30</b><span class="n">NEXT</span></div><span class="arr">→</span><span class="nul">NULL</span></div>
+</section>
+<section class="grid">
+  <article class="card"><h2>🧠 What is it?</h2><p>Each node holds <code>prev</code>, <code>data</code> and <code>next</code>, so you can walk forward and backward.</p></article>
+  <article class="card"><h2>🎯 Why use it?</h2><p>Fast insert/delete at both ends and easy deletion when you already have the node.</p></article>
+  <article class="card"><h2>🎬 Visualizer</h2><p>Animate every insert, delete and traversal with pointer-by-pointer steps.</p></article>
+  <article class="card"><h2>💻 C code</h2><p>A full menu-driven C program with a Copy button.</p></article>
+  <article class="card"><h2>📝 Quiz &amp; Viva</h2><p>15-question quiz, 10-question mini exam, challenges and viva answers.</p></article>
+  <article class="card"><h2>📈 Progress</h2><ul id="checklist" class="check"></ul></article>
+</section>
+<section class="card about"><h2>About Project</h2>
+  <p><b>Project:</b> Doubly Linked List Interactive Learning System<br><b>Subject:</b> Data Structures and Algorithms using C<br>
+  <b>Purpose:</b> To provide an interactive platform for understanding, visualizing, implementing, and practicing Doubly Linked Lists.</p></section>
+{% endblock %}
