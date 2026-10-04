@@ -1,0 +1,17 @@
+[
+{"q":"Which fields does a doubly linked list node contain?","o":["data only","data and next","prev, data and next","prev and next only"],"a":2,"e":"Each node stores data plus two pointers: prev and next."},
+{"q":"True or False: A doubly linked list node has two pointers.","o":["True","False"],"a":0,"e":"prev and next are the two pointers."},
+{"q":"Time complexity of insertion at the beginning?","o":["O(1)","O(n)","O(log n)","O(n²)"],"a":0,"e":"Only a few pointer updates are needed, no traversal."},
+{"q":"True or False: In a DLL, the first node's prev is NULL.","o":["True","False"],"a":0,"e":"NULL marks the start of the list."},
+{"q":"Which pointer makes backward traversal possible?","o":["next","prev","head","data"],"a":1,"e":"prev points to the previous node."},
+{"q":"What happens if head is NULL?","code":"newNode->next = head;\nhead->prev = newNode;\nhead = newNode;","o":["Works fine","Crash (NULL dereference)","Compile error","Infinite loop"],"a":1,"e":"head->prev dereferences NULL. Always check if (head != NULL) first."},
+{"q":"List: 10 ⇄ 20 ⇄ 30. What is printed?","code":"struct Node* t = head->next;\nprintf(\"%d\", t->prev->data);","o":["10","20","30","NULL"],"a":0,"e":"t is 20; t->prev is 10."},
+{"q":"List: 10 ⇄ 20 ⇄ 30. What is printed?","code":"struct Node* t = head;\nwhile (t->next != NULL) t = t->next;\nprintf(\"%d\", t->data);","o":["10","20","30","Garbage"],"a":2,"e":"The loop stops at the last node, 30."},
+{"q":"To delete a middle node t, which two statements reconnect its neighbours?","o":["t->prev->next = t->next; t->next->prev = t->prev;","t->next = NULL; t->prev = NULL;","head = t; free(t);","t->prev = t->next;"],"a":0,"e":"Both neighbours must skip over t before you free it."},
+{"q":"Insert at the end WITHOUT a tail pointer takes:","o":["O(1)","O(n)","O(log n)","O(n²)"],"a":1,"e":"You must walk to the last node first."},
+{"q":"True or False: A DLL uses less memory than a singly linked list.","o":["True","False"],"a":1,"e":"The extra prev pointer costs more memory."},
+{"q":"Which application commonly uses a DLL?","o":["Browser back/forward history","Binary search","Matrix multiplication","Hash function"],"a":0,"e":"You move to the previous or next page, just like prev/next."},
+{"q":"Insert newNode after temp. What should be done FIRST so the rest of the list is not lost?","o":["newNode->next = temp->next;","temp->next = newNode;","free(temp);","temp->prev = NULL;"],"a":0,"e":"Save the link to the following node before changing temp->next."},
+{"q":"True or False: After removing a node you should call free() on it.","o":["True","False"],"a":0,"e":"free() releases memory and prevents a memory leak."},
+{"q":"List 10 ⇄ 20 ⇄ 30 with tail at 30. What is printed?","code":"t = tail;\nwhile (t) { printf(\"%d \", t->data); t = t->prev; }","o":["10 20 30","30 20 10","30 20","Nothing"],"a":1,"e":"Backward traversal visits 30, 20, 10, then NULL stops the loop."}
+]
